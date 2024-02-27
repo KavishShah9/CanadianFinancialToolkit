@@ -1,6 +1,7 @@
 import random
+from difflib import get_close_matches
 
-# Federal
+# Federal tax brackets
 federal_tax_brackets = [
     (55867, 0.15),
     (111733, 0.205),
@@ -9,7 +10,7 @@ federal_tax_brackets = [
     (float('inf'), 0.33)
 ]
 
-# Provincial
+# Provincial tax rates
 provincial_tax_rates = {
     "alberta": [(142292, 0.1), (170751, 0.12), (227668, 0.13), (341502, 0.14), (float('inf'), 0.15)],
     "british columbia": [(45654, 0.0506), (91310, 0.077), (104835, 0.105), (127299, 0.1229), (172602, 0.147),
@@ -69,25 +70,41 @@ def calculate_rrsp_contribution(yearly_income, start_year, retirement_year, sala
     return table, total_contributions, total_returns, rrsp_account
 
 
+def calculate_tfsa_contribution(yearly_income, start_year, retirement_year, salary_growth_rate):
+    table = []
+    salary = yearly_income
+    contribution_rate = 0.08
+    total_contributions = 0
+    total_returns = 0
+    tfsa_account = 0
+
+    for year in range(start_year, retirement_year + 1):
+        employee_contribution = salary * contribution_rate
+        total_contributions += employee_contribution
+        rate_of_return = random.uniform(0.03, 0.05) * employee_contribution
+        total_returns += rate_of_return
+        tfsa_account = employee_contribution + rate_of_return
+        table.append([year, salary, employee_contribution, rate_of_return, tfsa_account])
+        salary *= (1 + min(salary_growth_rate, 5) / 100)
+
+    return table, total_contributions, total_returns, tfsa_account
+
+
 def print_table(table, title):
     print(f"\n{title}:")
-    print("{:<10} {:<15} {:<25} {:<30} {:<25}".
-          format("Year", "Salary/Income", "Contribution", "Return on Investment",
-                 "Total Amount"))
+    print("{:<10} {:<15} {:<25} {:<30} {:<25}".format("Year", "Salary/Income", "Contribution", "Return on Investment",
+                                                      "Total Amount"))
     for row in table:
         print("{:<10} ${:<15.2f} ${:<25.2f} ${:<30.2f} ${:<25.2f}".format(*row))
 
 
 def rrsp_func():
-    print("Welcome to the Retirement Planning Calculator!")
-    print("This calculator will help you plan your retirement by analyzing your RRSP contributions.")
-    print("Let's get started!")
-
     yearly_income = float(input("Enter your yearly income: "))
     start_year = int(input("Enter the year you started working: "))
-    max_retirement_year = start_year + 40  # Assuming maximum working years of 40
+    max_retirement_year = start_year + 40
     retirement_year = int(input(f"Enter your expected year of retirement (max {max_retirement_year}): "))
     retirement_year = min(retirement_year, max_retirement_year)
+
     salary_growth_rate = float(input("Enter the rate at which your salary will grow annually (max 5%) (%): "))
 
     rrsp_table, rrsp_total_contributions, rrsp_total_returns, rrsp_final_amount = calculate_rrsp_contribution(
@@ -102,6 +119,55 @@ def rrsp_func():
         f"At an average annual return rate of 3% to 5%, you can expect to earn approximately ${rrsp_total_returns:.2f} "
         f"across {retirement_year - start_year + 1} years.")
     print(f"The total amount in your RRSP Account at the end of {retirement_year} would be ${rrsp_final_amount:.2f}.")
+
+    province_input = input("Enter your province: ").lower()
+    suggested_province = get_close_matches(province_input, provincial_tax_rates.keys(), n=1, cutoff=0.7)
+    if suggested_province and suggested_province[0] != province_input:
+        confirm = input(f"Did you mean {suggested_province[0]}? Enter 'y' or 'n': ")
+        if confirm.lower() == 'y':
+            province_input = suggested_province[0]
+
+    provincial_tax_brackets = provincial_tax_rates.get(province_input)
+
+    if provincial_tax_brackets is None:
+        print("Province not found. Cannot calculate taxes.")
+        return
+
+    federal_tax = calculate_taxable_income(rrsp_total_returns, federal_tax_brackets)
+    provincial_tax = calculate_taxable_income(rrsp_total_returns, provincial_tax_brackets)
+    total_tax_deduction = federal_tax + provincial_tax
+
+    rrsp_after_tax = rrsp_final_amount - total_tax_deduction
+
+    print(f"\nFederal Tax Deduction: \033[90m${federal_tax:.2f}\033[0m")
+    print(f"Provincial Tax Deduction ({province_input.title()}): \033[90m${provincial_tax:.2f}\033[0m")
+    print(f"Total Tax Deduction: \033[90m${total_tax_deduction:.2f}\033[0m")
+    print(f"\nAmount left after tax deduction for RRSP: \033[90m${rrsp_after_tax:.2f}\033[0m")
+
+    show_tfsa_details = input("Do you want to see the TFSA details? (y/n): ").lower()
+    if show_tfsa_details == 'y':
+        tfsa_table, tfsa_total_contributions, tfsa_total_returns, tfsa_final_amount = calculate_tfsa_contribution(
+            yearly_income, start_year, retirement_year, salary_growth_rate)
+        print_table(tfsa_table, "TFSA Details")
+
+        print(f"\nYou contributed a total of ${tfsa_total_contributions:.2f} into your TFSA Account.")
+        print(
+            f"At an average annual return rate of 3% to 5%, you can expect to earn approximately "
+            f"${tfsa_total_returns:.2f} across {retirement_year - start_year + 1} years.")
+        print(
+            f"The total amount in your TFSA Account at the end of {retirement_year} would be ${tfsa_final_amount:.2f}.")
+
+        federal_tax_tfsa = calculate_taxable_income(tfsa_total_returns, federal_tax_brackets)
+        provincial_tax_tfsa = calculate_taxable_income(tfsa_total_returns, provincial_tax_brackets)
+        total_tax_deduction_tfsa = federal_tax_tfsa + provincial_tax_tfsa
+
+        tfsa_after_tax = tfsa_final_amount - total_tax_deduction_tfsa
+
+        print(f"\nFederal Tax Deduction for TFSA: \033[90m${federal_tax_tfsa:.2f}\033[0m")
+        print(
+            f"Provincial Tax Deduction for TFSA ({province_input.title()}): \033[90m${provincial_tax_tfsa:.2f}\033[0m")
+        print(f"Total Tax Deduction for TFSA: \033[90m${total_tax_deduction_tfsa:.2f}\033[0m")
+        print(f"\nAmount left after tax deduction for TFSA: \033[90m${tfsa_after_tax:.2f}\033[0m")
 
 
 if __name__ == "__main__":
