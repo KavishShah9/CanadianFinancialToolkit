@@ -34,4 +34,5 @@ The information provided in the Canadian Financial Toolkit is for educational pu
 - Kavish Shah: Dal ID Number: B00961429
 - Jay Raval: Dal ID Number: B00966367
 
-## Video Link: https://dalu-my.sharepoint.com/:v:/g/personal/kv226484_dal_ca/ESKWqDPLQhhCvEWihvYdNawBXh6uduUdJemk6kSJuX3MgQ?e=henLBe
+## Video Link
+- https://dalu-my.sharepoint.com/:v:/g/personal/kv226484_dal_ca/ESKWqDPLQhhCvEWihvYdNawBXh6uduUdJemk6kSJuX3MgQ?e=henLBe
