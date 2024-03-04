@@ -23,6 +23,8 @@ This toolkit is designed to be user-friendly and informative. To get started, fo
 - Copy code: git clone https://github.com/KavishShah9/CanadianFinancialToolkit.git
 - Navigate to the 'main.py' File: After cloning the project, navigate to the 'main.py' file located in the repository. This file comprises all other files necessary for running the toolkit.
 - Run the Code: Execute the 'main.py' file to perform calculations, analyze tax scenarios, and estimate earnings. Make sure to input accurate data for precise results.
+- (Simply download all the files provided above. Keep it in same folder and run the main.py file to execute the program)
+- PS: There is no need for the requirements.txt file in our project as it is empty since we only used the in-ubilt python modules.  
 
 ## Support
 For any questions, issues, or feedback regarding the Canadian Financial Toolkit, please open an issue or reach out to the project maintainers.
