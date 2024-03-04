@@ -29,3 +29,9 @@ For any questions, issues, or feedback regarding the Canadian Financial Toolkit,
 
 ## Disclaimer
 The information provided in the Canadian Financial Toolkit is for educational purposes only and should not be considered financial advice. It is essential to consult with a qualified financial advisor or tax professional before making any financial decisions.
+
+## Author
+- Kavish Shah: Dal ID Number: B00961429
+- Jay Raval: Dal ID Number: B00966367
+
+## Video Link: https://dalu-my.sharepoint.com/:v:/g/personal/kv226484_dal_ca/ESKWqDPLQhhCvEWihvYdNawBXh6uduUdJemk6kSJuX3MgQ?e=henLBe
