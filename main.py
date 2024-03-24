@@ -3,8 +3,6 @@ from TFSA import tfsa_func
 from Taxes import taxes_func
 from Millionaire import millionaire_func
 from FHSA import is_eligible_for_fhsa, calculate_fhsa_investment
-from RRSP import rrsp_func
-from Info import info_func
 
 if __name__ == "__main__":
 
@@ -28,9 +26,7 @@ if __name__ == "__main__":
         2: "Calculate the tax you will pay for 2023",
         3: "Calculate how many years it will take for you to earn a millionaire/any amount",
         4: "Know about First Home Saving Account (FHSA) account and the amount of tax you will save by investing in it",
-        5: "Know about Registered Retirement Savings Plan (RRSP)",
-        6: "Detailed information on various Canadian Bank accounts",
-        7: "To exit the program"
+        5: "To exit the program"
     }
 
     while True:
@@ -49,7 +45,7 @@ if __name__ == "__main__":
             # Prompt user for choice
             user_choice = int(input("\nPlease select an option from the above list: "))
 
-            if user_choice == 7:
+            if user_choice == 5:
                 print()
                 seperator()
                 print("Bye Bye. See you next time!")
@@ -72,12 +68,6 @@ if __name__ == "__main__":
                     print()
                     eligible = is_eligible_for_fhsa()
                     calculate_fhsa_investment(eligible)
-                elif user_choice == 5:
-                    print()
-                    rrsp_func()  # Call function to calculate time to become a millionaire
-                elif user_choice == 6:
-                    print()
-                    info_func()  # Call function to calculate time to become a millionaire
                 else:
                     print("Nothing")
 
